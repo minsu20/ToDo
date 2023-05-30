@@ -9,14 +9,16 @@ import com.example.todo.domain.user.presentation.dto.res.UserResponse.SignupResp
 import com.example.todo.global.config.jwt.TokenProvider
 import com.example.todo.global.dto.TokenInfoResponse
 import com.example.todo.global.exception.user.NotFoundEmailException
-import com.example.todo.global.exception.user.NotFoundPasswordException
+import com.example.todo.global.exception.user.WrongPasswordException
 import com.example.todo.global.exception.user.OverlapUserException
+import com.example.todo.global.exception.user.WrongEmailException
+import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.security.authentication.InternalAuthenticationServiceException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import javax.naming.AuthenticationException
 
 @Service
 class UserServiceImpl(
@@ -40,9 +42,16 @@ class UserServiceImpl(
         try {
             val tokenInfoResponse = validateLogin(loginRequest)
             return LoginResponse.from(tokenInfoResponse)
-        } catch (e: AuthenticationException) {
-            throw NotFoundPasswordException()
+        } catch (e: BadCredentialsException) {
+            throw WrongPasswordException()
+        } catch (e: InternalAuthenticationServiceException){
+            throw WrongEmailException()
         }
+    }
+
+    override fun validateEmail(email: String): User {
+        return userRepository.findNotDeletedByEmail(email)
+                .orElseThrow { NotFoundEmailException() }
     }
 
     private fun validateLogin(loginRequest: LoginRequest): TokenInfoResponse {
@@ -50,10 +59,5 @@ class UserServiceImpl(
         val authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken)
         SecurityContextHolder.getContext().authentication = authentication
         return tokenProvider.createToken(authentication)
-    }
-
-    override fun validateEmail(email: String): User {
-        return userRepository.findNotDeletedByEmail(email)
-                .orElseThrow { NotFoundEmailException() }
     }
 }
