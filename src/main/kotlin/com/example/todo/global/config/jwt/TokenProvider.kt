@@ -1,13 +1,15 @@
 package com.example.todo.global.config.jwt
 
+import com.example.todo.domain.user.domain.UserRepository
 import com.example.todo.global.config.jwt.exception.*
 import com.example.todo.global.config.security.service.CustomUserDetails
 import com.example.todo.global.dto.TokenInfoResponse
+import com.example.todo.global.exception.user.NotFoundEmailException
 import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
-import lombok.Value
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
@@ -81,9 +83,11 @@ class TokenProvider(
                 .map(::SimpleGrantedAuthority)
                 .toList()
 
-        val user = userRepository.findNotDeletedByEmail(claims?.subject)
+        val user = claims?.let {
+            userRepository.findNotDeletedByEmail(it.subject)
                 .orElseThrow(::NotFoundEmailException)
-        return UsernamePasswordAuthenticationToken(CustomUserDetails(user), token, authorities)
+        }
+        return UsernamePasswordAuthenticationToken(user?.let { CustomUserDetails(it) }, token, authorities)
     }
 
 

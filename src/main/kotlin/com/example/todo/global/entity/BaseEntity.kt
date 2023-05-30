@@ -10,7 +10,7 @@ import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
-abstract class BaseTimeEntity {
+abstract class BaseEntity {
     @CreatedDate
     @Column(nullable = false, updatable = false)
     var createdAt: LocalDateTime = LocalDateTime.now()
@@ -20,4 +20,7 @@ abstract class BaseTimeEntity {
     @Column(nullable = false)
     var modifiedAt: LocalDateTime = LocalDateTime.now()
         protected set
+
+    @Column(nullable = false)
+    var isDeleted : Boolean = false
 }

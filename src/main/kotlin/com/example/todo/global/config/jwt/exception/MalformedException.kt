@@ -1,7 +1,9 @@
 package com.example.todo.global.config.jwt.exception
 
+import com.example.todo.global.config.jwt.exception.JWTExceptionList.MAL_FORMED_TOKEN
+
 class MalformedException : JwtException(
-        JWTExceptionList.MAL_FORMED_TOKEN.errorCode,
-        JWTExceptionList.MAL_FORMED_TOKEN.httpStatus,
-        JWTExceptionList.MAL_FORMED_TOKEN.message
+        MAL_FORMED_TOKEN.errorCode,
+        MAL_FORMED_TOKEN.httpStatus,
+        MAL_FORMED_TOKEN.message
 )

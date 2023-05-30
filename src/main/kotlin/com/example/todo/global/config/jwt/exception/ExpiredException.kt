@@ -1,7 +1,9 @@
 package com.example.todo.global.config.jwt.exception
 
+import com.example.todo.global.config.jwt.exception.JWTExceptionList.EXPIRED_TOKEN
+
 class ExpiredException: JwtException(
-        JWTExceptionList.EXPIRED_TOKEN.errorCode,
-        JWTExceptionList.EXPIRED_TOKEN.httpStatus,
-        JWTExceptionList.EXPIRED_TOKEN.message
+        EXPIRED_TOKEN.errorCode,
+        EXPIRED_TOKEN.httpStatus,
+        EXPIRED_TOKEN.message
 )

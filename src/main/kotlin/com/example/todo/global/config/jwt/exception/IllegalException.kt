@@ -1,7 +1,9 @@
 package com.example.todo.global.config.jwt.exception
 
+import com.example.todo.global.config.jwt.exception.JWTExceptionList.ILLEGAL_TOKEN
+
 class IllegalException : JwtException(
-        JWTExceptionList.ILLEGAL_TOKEN.errorCode,
-        JWTExceptionList.ILLEGAL_TOKEN.httpStatus,
-        JWTExceptionList.ILLEGAL_TOKEN.message
+        ILLEGAL_TOKEN.errorCode,
+        ILLEGAL_TOKEN.httpStatus,
+        ILLEGAL_TOKEN.message
 )

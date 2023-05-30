@@ -1,7 +1,9 @@
 package com.example.todo.global.config.jwt.exception
 
+import com.example.todo.global.config.jwt.exception.JWTExceptionList.UNKNOWN_ERROR
+
 class UnknownException  : JwtException(
-        JWTExceptionList.UNKNOWN_ERROR.errorCode,
-        JWTExceptionList.UNKNOWN_ERROR.httpStatus,
-        JWTExceptionList.UNKNOWN_ERROR.message
+        UNKNOWN_ERROR.errorCode,
+        UNKNOWN_ERROR.httpStatus,
+        UNKNOWN_ERROR.message
 )
