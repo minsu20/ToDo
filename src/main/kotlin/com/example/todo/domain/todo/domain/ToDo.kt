@@ -1,7 +1,7 @@
 package com.example.todo.domain.todo.domain
 
 import com.example.todo.domain.user.domain.User
-import com.example.todo.global.entity.BaseTimeEntity
+import com.example.todo.global.entity.BaseEntity
 import lombok.RequiredArgsConstructor
 import java.time.LocalDate
 import javax.persistence.*
@@ -29,4 +29,4 @@ data class ToDo (
         @JoinColumn(name = "user_id", nullable = false)
         var user: User
 
-) : BaseTimeEntity()
+) : BaseEntity()

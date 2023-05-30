@@ -1,7 +1,9 @@
 package com.example.todo.global.config.jwt.exception
 
+import com.example.todo.global.config.jwt.exception.JWTExceptionList.UNSUPPORTED_TOKEN
+
 class UnsupportedException : JwtException(
-        JWTExceptionList.UNSUPPORTED_TOKEN.errorCode,
-        JWTExceptionList.UNSUPPORTED_TOKEN.httpStatus,
-        JWTExceptionList.UNSUPPORTED_TOKEN.message
+        UNSUPPORTED_TOKEN.errorCode,
+        UNSUPPORTED_TOKEN.httpStatus,
+        UNSUPPORTED_TOKEN.message
 )

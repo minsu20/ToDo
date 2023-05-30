@@ -44,6 +44,7 @@ dependencies {
 	implementation ("com.google.code.gson:gson:2.8.7")
 
 	implementation("io.github.microutils:kotlin-logging:2.0.11")
+	implementation ("org.springframework.boot:spring-boot-starter-validation")
 }
 
 allOpen { // 추가적으로 열어줄 allOpen
