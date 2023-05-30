@@ -29,8 +29,8 @@ class UserServiceImpl(
 ) : UserService  {
 
     override fun signup(signupRequest: SignupRequest): SignupResponse {
-        if(userRepository.findNotDeletedByEmail(signupRequest.email).isEmpty){
-            val user=User(signupRequest.email,signupRequest.password,signupRequest.nickName)
+        if(userRepository.findNotDeletedByEmail(signupRequest.email!!).isEmpty){
+            val user=User(signupRequest.email!!,signupRequest.password!!,signupRequest.nickName!!)
             user.encryptPassword(passwordEncoder)
             userRepository.save(user);
             return SignupResponse(user.id!!)
