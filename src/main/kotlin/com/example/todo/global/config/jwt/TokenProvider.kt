@@ -26,7 +26,7 @@ class TokenProvider(
 
     companion object {
         private const val AUTHORITIES_KEY = "auth"
-        private const val ADDITIONAL_INFO = "isAdditionalInfoProvided"
+        private const val USER_ID = "id"
     }
 
     @Value("\${jwt.secret}")
@@ -45,10 +45,13 @@ class TokenProvider(
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    fun createToken(authentication: Authentication, isAdditionalInfoProvided: Boolean, userId: Long): TokenInfoResponse {
+    fun createToken(authentication: Authentication): TokenInfoResponse {
         val authorities = authentication.authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","))
+
+        val principal= authentication.principal as CustomUserDetails
+        val id=principal.user.id
 
         val now = Date().time
         val accessTokenValidity = Date(now + 1000 * accessTokenValidityTime)
@@ -57,7 +60,6 @@ class TokenProvider(
         val accessToken = Jwts.builder()
                 .setSubject(authentication.name)
                 .claim(AUTHORITIES_KEY, authorities)
-                .claim(ADDITIONAL_INFO, isAdditionalInfoProvided)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(accessTokenValidity)
                 .compact()
@@ -68,13 +70,9 @@ class TokenProvider(
                 .compact()
 
 
-        return TokenInfoResponse.from("Bearer", accessToken, refreshToken, refreshTokenValidityTime)
+        return TokenInfoResponse.from("Bearer", accessToken, refreshToken, refreshTokenValidityTime, id!!)
     }
 
-    fun getAdditionalInfoProvided(token: String): Boolean {
-        val claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).body
-        return claims.get(ADDITIONAL_INFO, Boolean::class.java)
-    }
 
     fun getAuthentication(token: String?): Authentication {
         var claims: Claims? = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).body

@@ -6,4 +6,9 @@ object UserRequest {
             val nickName: String,
             val password: String
     )
+
+    data class LoginRequest(
+            val email: String,
+            val password: String
+    )
 }

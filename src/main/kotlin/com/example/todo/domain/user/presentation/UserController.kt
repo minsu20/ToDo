@@ -17,9 +17,15 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api/user")
 class UserController(private val userService: UserService) {
+
     @PostMapping("/signup")
     fun singupUser(@Valid @RequestBody signupRequest: UserRequest.SignupRequest): ResponseEntity<ResponseDto<SignupResponse>> {
         return ResponseEntity.ok(ResponseDto.create(HttpStatus.OK.value(), EUserResponseMessage.SIGN_UP_SUCCESS.message, userService.signup(signupRequest)))
+    }
+
+    @PostMapping("/login")
+    fun singupUser(@Valid @RequestBody loginRequest: UserRequest.LoginRequest): ResponseEntity<ResponseDto<UserResponse.LoginResponse>> {
+        return ResponseEntity.ok(ResponseDto.create(HttpStatus.OK.value(), EUserResponseMessage.LOGIN_SUCCESS.message, userService.login(loginRequest)))
     }
 
 }
