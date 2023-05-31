@@ -50,7 +50,8 @@ class SecurityConfig(
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/v3/api-docs").permitAll()
-                .anyRequest().permitAll()
+                .antMatchers("/api/user/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .apply<SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity>>(JwtSecurityConfig(tokenProvider))
     }

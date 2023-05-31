@@ -9,24 +9,28 @@ import javax.persistence.*
 @Entity
 @RequiredArgsConstructor
 @Table(name = "todo")
-data class ToDo (
+class ToDo (
+        content: String,
+        whenToDo: LocalDate,
+        user:User
+) : BaseEntity() {
+
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "todo_id")
-        val id: Long?=null,
+        val id: Long? = null
 
         @Column(nullable = false)
-        var content: String,
+        var content: String=content
 
         @Column(nullable = false)
-        var whenToDo: LocalDate,
+        var whenToDo: LocalDate=whenToDo
 
         @Enumerated(EnumType.STRING)
         @Column(nullable = false)
-        var status: ToDoStatus = ToDoStatus.TODO,
+        var status: ToDoStatus = ToDoStatus.TODO
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "user_id", nullable = false)
-        var user: User
-
-) : BaseEntity()
+        var user: User=user
+}
