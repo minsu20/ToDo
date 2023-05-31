@@ -1,24 +1,25 @@
 package com.example.todo.domain.todo.presentation
 
+import com.example.todo.domain.todo.application.ToDoService
 import com.example.todo.domain.todo.presentation.constant.ETodoResponseMessage
 import com.example.todo.domain.todo.presentation.dto.req.ToDoRequest.CreateRequest
+import com.example.todo.domain.todo.presentation.dto.req.ToDoRequest.UpdateRequest
+import com.example.todo.domain.todo.presentation.dto.res.ToDoResponse.ChangeStatusResponse
 import com.example.todo.domain.todo.presentation.dto.res.ToDoResponse.CreateResponse
+import com.example.todo.domain.todo.presentation.dto.res.ToDoResponse.GetResponse
+import com.example.todo.domain.todo.presentation.dto.res.ToDoResponse.UpdateResponse
 import com.example.todo.global.dto.ResponseDto
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import com.example.todo.domain.todo.application.ToDoService
 import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/todo")
 class ToDoController(private val toDoService: ToDoService) {
     @PostMapping
-    fun signup(@Valid @RequestBody createRequest: CreateRequest): ResponseEntity<ResponseDto<CreateResponse>> {
-        val createResponse=toDoService.createTodo(createRequest)
+    fun create(@Valid @RequestBody createRequest: CreateRequest): ResponseEntity<ResponseDto<CreateResponse>> {
+        val createResponse = toDoService.createTodo(createRequest)
         val location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -27,8 +28,23 @@ class ToDoController(private val toDoService: ToDoService) {
         return ResponseEntity.created(location).body(ResponseDto.create(ETodoResponseMessage.CREATE_TODO_SUCCESS.message, createResponse))
     }
 
-    //TODO 투두리스트 수정
-    //TODO 투두리스트 상태변화 (TODO->DONE, DONE->TODO)
-    //TODO 투두리스트 전체조회
-    //TODO 투두리스트 일정 예정 날짜순으로 정렬 (오름차순, 내림차순)
+    @PatchMapping("/{id}")
+    fun update(@Valid @PathVariable id: Long, @RequestBody updateRequest: UpdateRequest): ResponseEntity<ResponseDto<UpdateResponse>> {
+        return ResponseEntity.ok(ResponseDto.create(ETodoResponseMessage.UPDATE_TODO_SUCCESS.message, toDoService.updateTodo(id, updateRequest)))
+    }
+
+    @PatchMapping("/{id}/status")
+    fun changeStatus(@PathVariable id: Long): ResponseEntity<ResponseDto<ChangeStatusResponse>> {
+        return ResponseEntity.ok(ResponseDto.create(ETodoResponseMessage.CHANGE_TODO_STATUS_SUCCESS.message, toDoService.changeStatus(id)))
+    }
+
+    @GetMapping("/asc")
+    fun getAsc(): ResponseEntity<ResponseDto<List<GetResponse>>> {
+        return ResponseEntity.ok(ResponseDto.create(ETodoResponseMessage.GET_TODO_ASC_SUCCESS.message, toDoService.getAsc()))
+    }
+
+    @GetMapping("/desc")
+    fun getDesc(): ResponseEntity<ResponseDto<List<GetResponse>>> {
+        return ResponseEntity.ok(ResponseDto.create(ETodoResponseMessage.GET_TODO_DESC_SUCCESS.message, toDoService.getDesc()))
+    }
 }

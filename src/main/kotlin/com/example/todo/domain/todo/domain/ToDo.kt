@@ -12,7 +12,8 @@ import javax.persistence.*
 class ToDo (
         content: String,
         whenToDo: LocalDate,
-        user:User
+        user:User,
+        nickName: String
 ) : BaseEntity() {
 
         @Id
@@ -33,4 +34,15 @@ class ToDo (
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "user_id", nullable = false)
         var user: User=user
+
+        @Column(nullable = false)
+        var userNickName: String=nickName
+
+        fun changeStatus() {
+                status = when (status) {
+                        ToDoStatus.TODO -> ToDoStatus.DONE
+                        ToDoStatus.DONE -> ToDoStatus.TODO
+                }
+        }
+
 }
