@@ -8,27 +8,28 @@ import javax.persistence.*
 @Entity
 @Table(name = "user")
 class User(
-        email: String,
-        password: String,
-        nickname: String) : BaseEntity() {
+        initialEmail: String,
+        initialPassword: String,
+        initialNickname: String,
+        initialRole: Role = Role.ROLE_USER) : BaseEntity() {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "user_id")
-        var id: Long?=null
+        val id: Long?=null
 
         @Column(nullable = false)
-        var email: String=email
+        val email: String=initialEmail
 
         @Column(nullable = false)
-        var password: String=password
+        var password: String=initialPassword
 
         @Column(nullable=false)
-        var nickName: String=nickname
+        val nickName: String=initialNickname
 
         @Column
         @Enumerated(EnumType.STRING)
-        var role: Role?=Role.ROLE_USER
+        val role: Role?=Role.ROLE_USER
 
         fun encryptPassword(passwordEncoder: PasswordEncoder) {
                 password = passwordEncoder.encode(password)
