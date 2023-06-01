@@ -26,8 +26,7 @@ class ToDoServiceImpl(
 
     override fun updateTodo(id: Long, updateRequest: UpdateRequest): UpdateResponse {
         val todo = validateTodo(id)
-        updateRequest.content?.let { todo.content = it }
-        updateRequest.whenToDo?.let { todo.whenToDo = LocalDate.parse(it) }
+        todo.updateTodo(updateRequest)
         toDoRepository.save(todo)
         return UpdateResponse(todo.id!!)
     }

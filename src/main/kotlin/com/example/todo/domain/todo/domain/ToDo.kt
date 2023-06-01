@@ -1,5 +1,6 @@
 package com.example.todo.domain.todo.domain
 
+import com.example.todo.domain.todo.presentation.dto.req.ToDoRequest.UpdateRequest
 import com.example.todo.domain.user.domain.User
 import com.example.todo.global.entity.BaseEntity
 import lombok.RequiredArgsConstructor
@@ -10,10 +11,10 @@ import javax.persistence.*
 @RequiredArgsConstructor
 @Table(name = "todo")
 class ToDo (
-        content: String,
-        whenToDo: LocalDate,
-        user:User,
-        nickName: String
+        initialContent: String,
+        initialWhenToDo: LocalDate,
+        initialUser: User,
+        initialNickName: String
 ) : BaseEntity() {
 
         @Id
@@ -22,10 +23,10 @@ class ToDo (
         val id: Long? = null
 
         @Column(nullable = false)
-        var content: String=content
+        var content: String=initialContent
 
         @Column(nullable = false)
-        var whenToDo: LocalDate=whenToDo
+        var whenToDo: LocalDate=initialWhenToDo
 
         @Enumerated(EnumType.STRING)
         @Column(nullable = false)
@@ -33,16 +34,18 @@ class ToDo (
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "user_id", nullable = false)
-        var user: User=user
+        val user: User=initialUser
 
         @Column(nullable = false)
-        var userNickName: String=nickName
+        val userNickName: String=initialNickName
 
         fun changeStatus() {
-                status = when (status) {
-                        ToDoStatus.TODO -> ToDoStatus.DONE
-                        ToDoStatus.DONE -> ToDoStatus.TODO
-                }
+                status = if (status == ToDoStatus.TODO) ToDoStatus.DONE else ToDoStatus.TODO
+        }
+
+        fun updateTodo(updateRequest: UpdateRequest) {
+                updateRequest.content?.let { this.content = it }
+                updateRequest.whenToDo?.let { this.whenToDo = LocalDate.parse(it) }
         }
 
 }
