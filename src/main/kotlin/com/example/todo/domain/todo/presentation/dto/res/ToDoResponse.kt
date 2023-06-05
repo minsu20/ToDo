@@ -16,10 +16,10 @@ object ToDoResponse {
     )
 
     data class GetResponse(
-            var id:Long,
-            var content:String,
-            var whenToDo: LocalDate,
-            var status: ToDoStatus,
-            var nickName: String,
+            val id:Long,
+            val content:String,
+            val whenToDo: LocalDate,
+            val status: ToDoStatus,
+            val nickName: String,
     )
 }
